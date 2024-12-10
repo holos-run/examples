@@ -1,0 +1,21 @@
+#! /bin/bash
+
+set -euo pipefail
+
+TOPLEVEL="$(cd $(dirname "$0") && git rev-parse --show-toplevel)"
+cd "$TOPLEVEL/sops"
+
+mkdir -p tmp
+tmpdir="$(mktemp -d -p tmp)"
+finish() {
+  rm -rf "$tmpdir"
+}
+trap finish EXIT
+
+export SOPS_AGE_KEY="AGE-SECRET-KEY-1XA348YJ9CZS2AWL2ZGE9EEMJS7KKPNYLW4UMQHE8QR2XK87EVUDSWYT7TH"
+
+set -x
+sops decrypt secrets/secrets.enc.yaml > "${tmpdir}/secrets.yaml"
+sops decrypt secrets/one.enc.yaml > "${tmpdir}/one.yaml"
+sops decrypt secrets/two.enc.yaml > "${tmpdir}/two.yaml"
+holos "$@" "--instance=${tmpdir}"
