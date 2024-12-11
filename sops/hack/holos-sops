@@ -18,4 +18,4 @@ set -x
 sops decrypt secrets/secrets.enc.yaml > "${tmpdir}/secrets.yaml"
 sops decrypt secrets/one.enc.yaml > "${tmpdir}/one.yaml"
 sops decrypt secrets/two.enc.yaml > "${tmpdir}/two.yaml"
-holos "$@" "--instance=${tmpdir}"
+holos "$@" "--extract-yaml=${tmpdir}"
